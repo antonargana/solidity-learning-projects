@@ -2,6 +2,11 @@
 
 pragma solidity >=0.8.0 <0.9.0;
 
+/// @title Practice Project - Ethereum Wallet
+/// @author Anton Argana
+/// @notice You can use this contract for only the most basic simulation
+/// @dev All function calls are currently implemented without side effects
+
 contract EthereumWallet{
     
     event TransferCrypto(address from, address to, uint amount);
@@ -9,6 +14,8 @@ contract EthereumWallet{
     event WithdrawCrypto(address to, uint balance);
     
     address payable public owner;
+    
+    //TODO check why msg.sender has to be converted to type payable...
     
     constructor () {
         owner = payable(msg.sender);
@@ -20,13 +27,13 @@ contract EthereumWallet{
         
     }
     
+    function depositToWallet() public payable{
+        emit DepositCrypto(msg.sender, msg.value, address(this).balance);
+    }
+    
     function withdraw(uint _amount) public onlyOwner{
         owner.transfer(_amount);
         emit WithdrawCrypto(msg.sender, address(this).balance);
-    }
-    
-    function depositToWallet() public payable{
-        emit DepositCrypto(msg.sender, msg.value, address(this).balance);
     }
     
     function sendCrypto(address payable _to, uint amount) public onlyOwner{
